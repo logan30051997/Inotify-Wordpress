@@ -53,7 +53,9 @@ WantedBy=multi-user.target
 - Chạy service 
 
 `systemctl daemon-reload`
+
 `systemctl start inotify`
+
 `systemctl enable inotify`
 
 ### 4. Tài liệu
