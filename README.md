@@ -12,7 +12,7 @@
 
 `yum install inotify-tools`
 
-## 3. Scripts tối ưu chạy Inotify theo dõi
+## 3. Scripts chạy Inotify theo dõi
 
 ### Scripts theo dõi inotify
 
@@ -105,7 +105,17 @@ WantedBy=multi-user.target
 
 `systemctl enable danger`
 
-### 4. Tài liệu
+
+### 4. Hoạt động 
+
+**Bước 1: khởi động service theo dõi folder**
+
+**Bước 2: Nếu có files đuôi .php được tạo trong folder được theo dõi sẽ gửi thông báo đến telegram cho quản trị biết**
+
+**Bước 3: Sau khi thông báo, tiếp tục kiểm tra files đúng định dạng và user Trusted (tin tưởng), nếu file thuộc user "nobody" sẽ move sang foler /tmp/danger và lưu ở đó và đồng thời thông báo về telegram cho quản trị là có file không đúng yêu cầu**
+
+*Sẽ có thông báo tạo files thỏa mãn yêu cầu và thông báo tạo files nguy hiểm (có thể kiểm tra trong /tmp/danger*
+### 5. Tài liệu
 
 http://manpages.ubuntu.com/manpages/bionic/man1/inotifywait.1.html
 
