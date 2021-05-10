@@ -23,18 +23,31 @@
 ```
 #!bin/bash
 #Check folder 
-inotifywait -m /home/www/wordpress /home/www/wordpress/wp-admin -e modify,delete,create,move |
+inotifywait -mr /home/www/wordpress.linex.vn -e modify,delete,moved_to |
     while read path action file euid; do
-        if [[ "${file}" =~ .*php$ ]]; then
+        if [[ "${file}" =~ .*php$ && "$action" == "MODIFY" ]]; then
 (
-messs="|$action| -- File '${file}' in directory $path"
+    mv ${path}/${file} ${path}/${file}.check
+    mv /tmp/wordpress/$file ${path}/${file}
+    cp -rp ${path}/${file} /tmp/wordpress/$file
+    
+) &
+(
+messs="|$action| -- File '${file}' in directory $path and check '${file}.check'"
 CHATID="-401349290"
 KEY="1782130751:AAFRzdmz-sEBCvOp2lrFeHeT9V4m4kJSd0k"
-
 /usr/bin/curl -k -s --max-time 10 -d "chat_id=$CHATID&disable_web_page_preview=1&parse_mode=html&text=$messs" https://api.telegram.org/bot$KEY/sendMessage
-) &
-#Check file with user "nobody" and move to /tmp/danger/
- find /home/www/wordpress/ -user nobody -iname "*.php" | xargs -I '{}' mv '{}' /tmp/danger/
+)
+fi
+        if [[ "${file}" =~ .*php$ && "$action" == "MOVED_TO" ]]; then
+        find /home/www/wordpress.linex.vn/ -type f -name '*.php' | xargs -I '{}' cp '{}' /tmp/wordpress
+        chown nginx:nginx ${path}/${file}
+(
+messs="hoan thien "$action""
+CHATID="-401349290"
+KEY="1782130751:AAFRzdmz-sEBCvOp2lrFeHeT9V4m4kJSd0k"
+/usr/bin/curl -k -s --max-time 10 -d "chat_id=$CHATID&disable_web_page_preview=1&parse_mode=html&text=$messs" https://api.telegram.org/bot$KEY/sendMessage
+)
         fi
     done
 ```
